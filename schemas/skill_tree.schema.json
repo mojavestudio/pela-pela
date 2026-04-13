@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pelapela:schemas:skill_tree:v1",
+  "title": "Skill Tree",
+  "description": "Complete skill tree structure for a language learning path",
+  "type": "object",
+  "required": [
+    "tree_id",
+    "language",
+    "version",
+    "nodes",
+    "pathways"
+  ],
+  "properties": {
+    "tree_id": {
+      "type": "string",
+      "description": "Unique identifier for this skill tree"
+    },
+    "language": {
+      "type": "object",
+      "required": ["code", "name"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "ISO 639-1 language code (e.g., ja, es, fr)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Language name in English"
+        },
+        "native_name": {
+          "type": "string",
+          "description": "Language name in native script"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "Skill tree version for updates"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "author": { "type": "string" },
+        "description": { "type": "string" },
+        "total_estimated_hours": { "type": "number" }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "description": "All skill nodes in the tree",
+      "items": {
+        "$ref": "urn:pelapela:schemas:skill_node:v1"
+      }
+    },
+    "pathways": {
+      "type": "array",
+      "description": "Recommended learning paths through the tree",
+      "items": {
+        "type": "object",
+        "required": ["pathway_id", "name", "skill_sequence"],
+        "properties": {
+          "pathway_id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "target_proficiency": { "type": "string" },
+          "estimated_duration_weeks": { "type": "integer" },
+          "skill_sequence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Ordered list of skill IDs"
+          }
+        }
+      }
+    },
+    "tiers": {
+      "type": "array",
+      "description": "Difficulty tier definitions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tier": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "proficiency_level": { "type": "string" }
+        }
+      }
+    }
+  }
+}

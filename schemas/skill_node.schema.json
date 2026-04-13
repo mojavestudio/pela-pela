@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pelapela:schemas:skill_node:v1",
+  "title": "Skill Node",
+  "description": "Language-agnostic skill tree node representing a learnable concept",
+  "type": "object",
+  "required": [
+    "id",
+    "skill_type",
+    "title",
+    "difficulty_tier",
+    "prerequisites",
+    "unlocks"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this skill node"
+    },
+    "skill_type": {
+      "type": "string",
+      "enum": ["foundation", "grammar", "vocabulary", "phrase", "conversation", "cultural", "advanced"],
+      "description": "Category of skill for natural grouping"
+    },
+    "title": {
+      "type": "object",
+      "description": "Localized titles for the skill",
+      "required": ["en"],
+      "properties": {
+        "en": { "type": "string" },
+        "native": { "type": "string" }
+      }
+    },
+    "description": {
+      "type": "object",
+      "description": "Localized descriptions",
+      "properties": {
+        "en": { "type": "string" },
+        "native": { "type": "string" }
+      }
+    },
+    "difficulty_tier": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Difficulty tier (1=beginner, 10=native-level mastery)"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Estimated hours to master this skill"
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Skills that must be completed before this one",
+      "items": {
+        "type": "object",
+        "required": ["skill_id", "relationship"],
+        "properties": {
+          "skill_id": { "type": "string" },
+          "relationship": {
+            "type": "string",
+            "enum": ["required", "recommended", "helpful"],
+            "description": "Strength of prerequisite relationship"
+          },
+          "mastery_threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.7,
+            "description": "Required mastery level (0-1) of prerequisite"
+          }
+        }
+      }
+    },
+    "unlocks": {
+      "type": "array",
+      "description": "Skills that become available after mastering this one",
+      "items": { "type": "string" }
+    },
+    "learning_objectives": {
+      "type": "array",
+      "description": "Specific learning outcomes",
+      "items": { "type": "string" }
+    },
+    "content": {
+      "type": "object",
+      "description": "Learning content for this skill",
+      "properties": {
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "native": { "type": "string" },
+              "romanization": { "type": "string" },
+              "translation": { "type": "string" },
+              "context": { "type": "string" },
+              "audio_url": { "type": "string" }
+            }
+          }
+        },
+        "explanations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "content": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["rule", "tip", "cultural_note", "common_mistake"]
+              }
+            }
+          }
+        },
+        "practice_exercises": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "exercise_type": {
+                "type": "string",
+                "enum": ["multiple_choice", "fill_blank", "translation", "listening", "speaking"]
+              },
+              "prompt": { "type": "string" },
+              "correct_answer": { "type": "string" },
+              "distractors": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for organization",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "proficiency_framework": {
+          "type": "string",
+          "description": "e.g., JLPT N5, CEFR A1, HSK 1"
+        },
+        "topic_areas": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "e.g., greetings, food, travel, business"
+        },
+        "part_of_speech": {
+          "type": "string",
+          "description": "For vocabulary nodes"
+        }
+      }
+    },
+    "progress_tracking": {
+      "type": "object",
+      "description": "User progress data (managed by client)",
+      "properties": {
+        "mastery_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Current mastery (0-1)"
+        },
+        "last_practiced": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "practice_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "is_unlocked": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

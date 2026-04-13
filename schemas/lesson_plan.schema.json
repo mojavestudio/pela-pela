@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pelapela:schemas:lesson_plan:v1",
+  "title": "Lesson Plan",
+  "description": "Complete curriculum with structured lesson progression",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "language",
+    "version",
+    "lessons",
+    "learning_paths"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "description": "Unique identifier for this lesson plan"
+    },
+    "language": {
+      "type": "object",
+      "required": ["code", "name"],
+      "properties": {
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "native_name": { "type": "string" }
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "Lesson plan version"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "author": { "type": "string" },
+        "description": { "type": "string" },
+        "total_lessons": { "type": "integer" },
+        "total_estimated_hours": { "type": "number" }
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "description": "All lessons in the curriculum",
+      "items": {
+        "$ref": "urn:pelapela:schemas:lesson:v1"
+      }
+    },
+    "learning_paths": {
+      "type": "array",
+      "description": "Curated sequences of lessons for different goals",
+      "items": {
+        "type": "object",
+        "required": ["path_id", "name", "lesson_sequence"],
+        "properties": {
+          "path_id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "target_proficiency": { "type": "string" },
+          "estimated_duration_weeks": { "type": "integer" },
+          "lesson_sequence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Ordered list of lesson IDs"
+          },
+          "milestones": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lesson_index": { "type": "integer" },
+                "title": { "type": "string" },
+                "description": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "difficulty_levels": {
+      "type": "array",
+      "description": "Difficulty level definitions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "level_id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "proficiency_framework": { "type": "string" },
+          "lesson_count": { "type": "integer" }
+        }
+      }
+    },
+    "topic_categories": {
+      "type": "array",
+      "description": "Thematic organization of lessons",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category_id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "lesson_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}
