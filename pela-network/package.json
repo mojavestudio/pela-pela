@@ -1,0 +1,23 @@
+{
+  "name": "pelapela-api",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers API for PelaPela Japanese learning network and lesson plans",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "api",
+    "japanese",
+    "learning"
+  ],
+  "author": "PelaPela",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

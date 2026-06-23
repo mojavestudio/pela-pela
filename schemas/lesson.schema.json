@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pelapela:schemas:lesson:v1",
+  "title": "Lesson",
+  "description": "A comprehensive lesson that groups related skills into a cohesive learning unit",
+  "type": "object",
+  "required": [
+    "lesson_id",
+    "title",
+    "difficulty_level",
+    "lesson_type",
+    "skills",
+    "prerequisites"
+  ],
+  "properties": {
+    "lesson_id": {
+      "type": "string",
+      "description": "Unique identifier for this lesson"
+    },
+    "title": {
+      "type": "object",
+      "required": ["en"],
+      "properties": {
+        "en": { "type": "string" },
+        "native": { "type": "string" }
+      }
+    },
+    "description": {
+      "type": "object",
+      "properties": {
+        "en": { "type": "string" },
+        "native": { "type": "string" }
+      }
+    },
+    "difficulty_level": {
+      "type": "string",
+      "enum": [
+        "absolute_beginner",
+        "beginner",
+        "elementary",
+        "pre_intermediate",
+        "intermediate",
+        "upper_intermediate",
+        "advanced",
+        "proficient"
+      ]
+    },
+    "lesson_type": {
+      "type": "string",
+      "enum": [
+        "foundation",
+        "vocabulary_theme",
+        "grammar_focus",
+        "conversation",
+        "cultural",
+        "mixed_skills",
+        "review"
+      ]
+    },
+    "estimated_duration_minutes": {
+      "type": "integer",
+      "minimum": 5,
+      "description": "Estimated time to complete this lesson"
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What learners will be able to do after completing this lesson"
+    },
+    "skills": {
+      "type": "array",
+      "description": "Individual skills taught in this lesson",
+      "items": {
+        "type": "object",
+        "required": ["skill_id", "skill_type"],
+        "properties": {
+          "skill_id": { "type": "string" },
+          "skill_type": {
+            "type": "string",
+            "enum": ["vocabulary", "grammar", "phrase", "kanji", "listening", "speaking"]
+          },
+          "is_core": {
+            "type": "boolean",
+            "description": "Whether this is a core skill that must be mastered"
+          }
+        }
+      }
+    },
+    "vocabulary": {
+      "type": "array",
+      "description": "Key vocabulary introduced in this lesson",
+      "items": {
+        "type": "object",
+        "properties": {
+          "word": { "type": "string" },
+          "reading": { "type": "string" },
+          "meaning": { "type": "string" },
+          "part_of_speech": { "type": "string" },
+          "example_sentence": { "type": "string" }
+        }
+      }
+    },
+    "grammar_points": {
+      "type": "array",
+      "description": "Grammar patterns taught in this lesson",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": { "type": "string" },
+          "explanation": { "type": "string" },
+          "usage": { "type": "string" },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "native": { "type": "string" },
+                "romanization": { "type": "string" },
+                "translation": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dialogues": {
+      "type": "array",
+      "description": "Conversation examples and practice dialogues",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "context": { "type": "string" },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "speaker": { "type": "string" },
+                "native": { "type": "string" },
+                "romanization": { "type": "string" },
+                "translation": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cultural_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "examples": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "exercises": {
+      "type": "array",
+      "description": "Practice exercises for this lesson",
+      "items": {
+        "type": "object",
+        "properties": {
+          "exercise_id": { "type": "string" },
+          "exercise_type": {
+            "type": "string",
+            "enum": [
+              "multiple_choice",
+              "fill_in_blank",
+              "translation",
+              "listening_comprehension",
+              "speaking_practice",
+              "sentence_building",
+              "matching"
+            ]
+          },
+          "prompt": { "type": "string" },
+          "correct_answer": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Lessons that should be completed before this one",
+      "items": {
+        "type": "object",
+        "required": ["lesson_id", "relationship"],
+        "properties": {
+          "lesson_id": { "type": "string" },
+          "relationship": {
+            "type": "string",
+            "enum": ["required", "recommended", "helpful"]
+          },
+          "completion_threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.7
+          }
+        }
+      }
+    },
+    "unlocks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Lesson IDs that become available after completing this lesson"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "proficiency_framework": { "type": "string" },
+        "topic_tags": { "type": "array", "items": { "type": "string" } },
+        "source_units": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string" },
+              "unit_id": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "description": "User progress tracking",
+      "properties": {
+        "completion_percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "mastery_level": { "type": "number", "minimum": 0, "maximum": 1 },
+        "exercises_completed": { "type": "integer" },
+        "last_studied": { "type": "string", "format": "date-time" },
+        "is_unlocked": { "type": "boolean" }
+      }
+    }
+  }
+}

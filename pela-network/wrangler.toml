@@ -1,0 +1,23 @@
+name = "pelapela-api"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# R2 bucket bindings for storing data files
+[[r2_buckets]]
+binding = "PELAPELA_DATA"
+bucket_name = "pelapela-data"
+
+# KV namespace for caching (optional)
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# Environment variables
+[vars]
+API_VERSION = "1.0.0"
+CORS_ORIGIN = "*"
+
+# Production environment
+[env.production]
+name = "pelapela-api-production"
+vars = { CORS_ORIGIN = "https://yourdomain.com" }
