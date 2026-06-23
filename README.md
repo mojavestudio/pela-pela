@@ -83,6 +83,14 @@ For human-judged correctness, use the notebook `evaluation/EvaluateNetwork.ipynb
 - **`edges.json` - Network connections between nodes with weighted relationships
 - **`index.html`** - Interactive network visualization
 
+#### Graph Construction & Visualization
+Our nodes consist of grammar constructions, function words, patterns (e.g., "appearance & visual impressions"), and example sentences; while our edges capture pre-requisite, contrast, morphological neighbor, and topic co-occurrence relations.
+
+For layout and rendering, we followed Cambridge Intelligence's graph-viz guidance to:
+- **Avoid hairballs**: Started with scoped neighborhoods, filtered high degree hubs, aggregated leaf clusters; enabled drill downs.
+- **See through snowstorms**: Enriched sparse nodes and added attributes, grouped by community or unit, and de-duplicated.
+- **Tame starbursts**: Collapse leaf combos around overly dominant hubs like very common particles then expand on demand.
+
 ### Evaluation (`evaluation/`)
 - **`evaluate_network.py`** - CLI evaluator that prints all metrics as numbers (no NaN), using only project files
 - **`EvaluateNetwork.ipynb`** - Optional notebook for deeper analysis and annotation workflows

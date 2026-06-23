@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-
 import argparse
 import json
 import math
 import re
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple, Set
-
 import networkx as nx
-
 
 def find_project_root(start: Path | None = None) -> Path:
     cwd = (start or Path.cwd()).resolve()
@@ -20,11 +17,9 @@ def find_project_root(start: Path | None = None) -> Path:
             return p
     return (cwd / "..").resolve()
 
-
 def load_json(path: Path):
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
-
 
 def build_graph(nodes_raw: List[Dict], edges_raw: List[Dict]) -> nx.Graph:
     G = nx.Graph()
@@ -39,15 +34,12 @@ def build_graph(nodes_raw: List[Dict], edges_raw: List[Dict]) -> nx.Graph:
             G.add_edge(s, t, **e)
     return G
 
-
 WORD_RE = re.compile(r"[A-Za-z']+")
-
 
 def text_tokens(s: str) -> Set[str]:
     if not isinstance(s, str):
         return set()
     return {t.lower() for t in WORD_RE.findall(s)}
-
 
 def judge_edge_auto(e: Dict, id2node: Dict[str, Dict]) -> Tuple[bool, bool, bool]:
     """Return (valid_strict, valid_lenient, directed_ok). Heuristic only."""
@@ -91,7 +83,6 @@ def judge_edge_auto(e: Dict, id2node: Dict[str, Dict]) -> Tuple[bool, bool, bool
 
     return bool(strict), bool(lenient), bool(directed_ok)
 
-
 def cohen_kappa_from_bools(a: List[bool], b: List[bool]) -> float:
     if not a or not b or len(a) != len(b):
         return 0.0
@@ -104,18 +95,16 @@ def cohen_kappa_from_bools(a: List[bool], b: List[bool]) -> float:
     pe = p_yes ** 2 + p_no ** 2
     return 1.0 if pe == 1 else (pa - pe) / (1 - pe)
 
-
 def compute_metrics(nodes_raw: List[Dict], edges_raw: List[Dict]) -> Dict[str, float]:
     G = build_graph(nodes_raw, edges_raw)
     id2node = {n: G.nodes[n] for n in G.nodes}
 
-    # Structure
     num_nodes = G.number_of_nodes()
     components = sorted(nx.connected_components(G), key=len, reverse=True)
     main_component_share = (len(components[0]) / num_nodes) if components and num_nodes else 0.0
     orphans_share = (sum(1 for n, d in G.degree() if d == 0) / num_nodes) if num_nodes else 0.0
 
-    # Core coverage (unique keywords)
+    # Core coverage
     core_keywords = {"は", "を", "に", "で", "の", "が", "です", "ます", "いる", "ある", "食べる", "行く", "来る"}
     node_labels = {n: (id2node[n].get("label") or id2node[n].get("id") or "") for n in G.nodes}
     covered = set()
@@ -126,7 +115,7 @@ def compute_metrics(nodes_raw: List[Dict], edges_raw: List[Dict]) -> Dict[str, f
                 break
     core_coverage_percent = (len(covered) / max(1, len(core_keywords))) * 100.0
 
-    # Auto baseline correctness
+    # baseline correctness
     valid_strict: List[bool] = []
     valid_lenient: List[bool] = []
     dir_flags: List[bool] = []
